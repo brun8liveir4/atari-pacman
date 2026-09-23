@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Atari 2600 – Jogo</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      background: black;
+      height: 100%;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    #game {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #fullscreen-btn {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 20;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: black;
+      color: white;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    EJS_player = "#game";
+
+    // 🔥 TROCA AQUI
+    EJS_core = "atari2600";
+    EJS_gameUrl = "roms/rr.a26"; // coloque sua ROM aqui
+
+    EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+    EJS_startOnLoaded = true;
+  </script>
+
+  <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+</head>
+
+<body>
+
+  <div id="overlay">▶ TOCAR PARA JOGAR</div>
+  <div id="fullscreen-btn">⛶ Tela cheia</div>
+  <div id="game"></div>
+
+  <script>
+    const overlay = document.getElementById("overlay");
+    const fsBtn   = document.getElementById("fullscreen-btn");
+
+    async function enterFullscreen() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) {
+        try { await el.requestFullscreen(); } catch(e){}
+      }
+    }
+
+    function updateFullscreenButton() {
+      const isFullscreen = document.fullscreenElement != null;
+      fsBtn.style.display = isFullscreen ? "none" : "block";
+    }
+
+    document.addEventListener("fullscreenchange", updateFullscreenButton);
+
+    overlay.addEventListener("click", async () => {
+      overlay.remove();
+      await enterFullscreen();
+    });
+
+    fsBtn.addEventListener("click", enterFullscreen);
+
+    window.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
+
+    updateFullscreenButton();
+  </script>
+
+</body>
+</html>
